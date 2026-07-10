@@ -3,10 +3,11 @@
 import { randomUUID } from "crypto";
 import { grievanceSchema } from "@/lib/schema";
 import { addGrievance } from "@/lib/db";
+import { generateReferenceCode } from "@/lib/reference";
 import { Grievance } from "@/lib/types";
 
 export type SubmitResult =
-  | { success: true; id: string }
+  | { success: true; id: string; referenceCode: string }
   | { success: false; error: string };
 
 /**
@@ -28,6 +29,7 @@ export async function submitGrievance(data: unknown): Promise<SubmitResult> {
 
   const grievance: Grievance = {
     id: randomUUID(),
+    referenceCode: generateReferenceCode(),
     ...parsed.data,
     status: "new",
     createdAt: new Date().toISOString(),
@@ -35,5 +37,5 @@ export async function submitGrievance(data: unknown): Promise<SubmitResult> {
 
   await addGrievance(grievance);
 
-  return { success: true, id: grievance.id };
+  return { success: true, id: grievance.id, referenceCode: grievance.referenceCode };
 }

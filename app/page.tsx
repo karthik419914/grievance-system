@@ -37,65 +37,74 @@ export default function HomePage() {
           It takes about two minutes, and our team reviews every submission.
         </Typography>
 
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
-          <Paper
-            elevation={0}
-            sx={{
-              p: 4,
-              flex: 1,
-              borderRadius: 3,
-              border: "1px solid",
-              borderColor: "divider",
-            }}
-          >
-            <EditNoteOutlinedIcon color="primary" sx={{ fontSize: 34, mb: 1.5 }} />
-            <Typography variant="h6" gutterBottom>
-              Submit a Grievance
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-              For residents, family members, or staff. No account needed — your
-              draft is saved automatically if you need to step away.
-            </Typography>
-            <Button
-              component={Link}
-              href="/submit"
-              variant="contained"
-              size="large"
-              fullWidth
-            >
-              Start Now
-            </Button>
-          </Paper>
+       <Box sx={{ mt: 4, display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2 }}>
+         <Button component={Link} href="/submit/history" variant="outlined" size="large" fullWidth>
+           Past submissions
+         </Button>
+         <Button component={Link} href="/submit/report" variant="outlined" size="large" fullWidth>
+           Search report
+         </Button>
+       </Box>
 
-          <Paper
-            elevation={0}
-            sx={{
-              p: 4,
-              flex: 1,
-              borderRadius: 3,
-              border: "1px solid",
-              borderColor: "divider",
-            }}
-          >
-            <AdminPanelSettingsOutlinedIcon color="primary" sx={{ fontSize: 34, mb: 1.5 }} />
-            <Typography variant="h6" gutterBottom>
-              Admin Dashboard
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-              For care home staff. Review, filter, and update the status of
-              submitted grievances.
-            </Typography>
-            <Button
-              component={Link}
-              href="/admin/login"
-              variant="outlined"
-              size="large"
-              fullWidth
-            >
-              Admin Sign In
-            </Button>
-          </Paper>
-        </Stack>
+       <Stack direction={{ xs: "column", sm: "row" }} spacing={3} sx={{ mt: 4 }}>
+         <Paper
+           elevation={0}
+           sx={{
+             p: 4,
+             flex: 1,
+             borderRadius: 3,
+             border: "1px solid",
+             borderColor: "divider",
+           }}
+         >
+           <EditNoteOutlinedIcon color="primary" sx={{ fontSize: 34, mb: 1.5 }} />
+           <Typography variant="h6" gutterBottom>
+             Submit a Grievance
+           </Typography>
+           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+             For residents, family members, or staff. No account needed — your
+             draft is saved automatically if you need to step away.
+           </Typography>
+           <Button
+             component={Link}
+             href="/submit"
+             variant="contained"
+             size="large"
+             fullWidth
+           >
+             Start Now
+           </Button>
+         </Paper>
+
+         <Paper
+           elevation={0}
+           sx={{
+             p: 4,
+             flex: 1,
+             borderRadius: 3,
+             border: "1px solid",
+             borderColor: "divider",
+           }}
+         >
+           <AdminPanelSettingsOutlinedIcon color="primary" sx={{ fontSize: 34, mb: 1.5 }} />
+           <Typography variant="h6" gutterBottom>
+             Admin Dashboard
+           </Typography>
+           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+             For care home staff. Review, filter, and update the status of
+             submitted grievances.
+           </Typography>
+           <Button
+             component={Link}
+             href="/admin/login"
+             variant="outlined"
+             size="large"
+             fullWidth
+           >
+             Admin Sign In
+           </Button>
+         </Paper>
+       </Stack>
 
        <Box sx={{ mt: 5, p: 4, borderRadius: 3, border: "1px solid", borderColor: "divider", bgcolor: "background.paper" }}>
          <Typography variant="h6" gutterBottom>

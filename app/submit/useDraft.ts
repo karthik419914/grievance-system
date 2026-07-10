@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { getStoredValue, removeStoredValue, setStoredValue } from "@/lib/storage";
 
 const DRAFT_KEY = "grievance_system_draft_v1";
 
@@ -16,7 +17,7 @@ export function useDraft<T extends Record<string, unknown>>(initial: T) {
 
   useEffect(() => {
     try {
-      const raw = window.localStorage.getItem(DRAFT_KEY);
+      const raw = getStoredValue(DRAFT_KEY);
       if (raw) {
         setData((prev) => ({ ...prev, ...JSON.parse(raw) }));
       }
@@ -31,7 +32,7 @@ export function useDraft<T extends Record<string, unknown>>(initial: T) {
   const save = useCallback((next: T) => {
     setData(next);
     try {
-      window.localStorage.setItem(DRAFT_KEY, JSON.stringify(next));
+      setStoredValue(DRAFT_KEY, JSON.stringify(next));
     } catch {
       // storage unavailable (private browsing, quota) — fail silently
     }
@@ -39,7 +40,7 @@ export function useDraft<T extends Record<string, unknown>>(initial: T) {
 
   const clear = useCallback(() => {
     try {
-      window.localStorage.removeItem(DRAFT_KEY);
+      removeStoredValue(DRAFT_KEY);
     } catch {
       // ignore
     }

@@ -4,6 +4,7 @@ export type GrievanceStatus = "new" | "in_review" | "resolved";
 
 export interface Grievance extends GrievanceFormData {
   id: string;
+  referenceCode: string;
   status: GrievanceStatus;
   createdAt: string; // ISO timestamp
 }

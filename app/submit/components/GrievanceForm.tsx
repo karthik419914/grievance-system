@@ -14,6 +14,7 @@ import StepTwo from "./StepTwo";
 import StepReview from "./StepReview";
 import SuccessScreen from "./SuccessScreen";
 import { useDraft } from "../useDraft";
+import { addSavedSubmissionId } from "../useSubmissions";
 import { submitGrievance } from "../actions";
 import { StepOneData, StepTwoData, GrievanceFormData } from "@/lib/schema";
 
@@ -36,7 +37,7 @@ export default function GrievanceForm() {
 
   const [activeStep, setActiveStep] = useState(0);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [submittedId, setSubmittedId] = useState<string | null>(null);
+  const [submittedCode, setSubmittedCode] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const { data, save, clear, loaded } = useDraft<Partial<GrievanceFormData>>(emptyData);
@@ -58,8 +59,9 @@ export default function GrievanceForm() {
     startTransition(async () => {
       const result = await submitGrievance(data);
       if (result.success) {
+        addSavedSubmissionId(result.referenceCode);
         clear();
-        setSubmittedId(result.id);
+        setSubmittedCode(result.referenceCode);
       } else {
         setSubmitError(result.error);
       }
@@ -69,8 +71,8 @@ export default function GrievanceForm() {
   // Avoid a flash of empty fields while the draft is read from localStorage.
   if (!loaded) return null;
 
-  if (submittedId) {
-    return <SuccessScreen referenceId={submittedId} />;
+  if (submittedCode) {
+    return <SuccessScreen referenceCode={submittedCode} />;
   }
 
   return (

@@ -5,9 +5,10 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
-export default function SuccessScreen({ referenceId }: { referenceId: string }) {
+export default function SuccessScreen({ referenceCode }: { referenceCode: string }) {
   return (
     <Paper
       elevation={0}
@@ -33,21 +34,30 @@ export default function SuccessScreen({ referenceId }: { referenceId: string }) 
           px: 2.5,
           py: 1,
           borderRadius: 2,
-          mb: 4,
+          mb: 2,
         }}
       >
         <Typography variant="caption" color="text.secondary" display="block">
-          Reference ID
+          Reference Code
         </Typography>
         <Typography variant="body2" fontWeight={700} sx={{ fontFamily: "monospace" }}>
-          {referenceId}
+          {referenceCode}
         </Typography>
       </Box>
-      <Box>
+      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        Remember this submission code so you can check your report status later.
+      </Typography>
+      <Stack spacing={2} sx={{ alignItems: "center" }}>
         <Button component={Link} href="/" variant="contained" size="large">
           Back to Home
         </Button>
-      </Box>
+        <Button component={Link} href="/submit/history" variant="outlined" size="large">
+          View my submissions
+        </Button>
+        <Button component={Link} href="/submit/report" variant="outlined" size="large">
+          Search report
+        </Button>
+      </Stack>
     </Paper>
   );
 }

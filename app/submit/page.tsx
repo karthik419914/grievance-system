@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 import Link from "next/link";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import GrievanceForm from "./components/GrievanceForm";
@@ -35,6 +36,15 @@ export default function SubmitPage() {
         <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
           Three short steps. Your progress is saved automatically on this device.
         </Typography>
+
+        <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2, mb: 4 }}>
+          <Button component={Link} href="/submit/history" variant="outlined" fullWidth>
+            Past submissions
+          </Button>
+          <Button component={Link} href="/submit/report" variant="outlined" fullWidth>
+            Search report
+          </Button>
+        </Box>
 
         <GrievanceForm />
       </Container>
