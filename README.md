@@ -1,75 +1,148 @@
 # Grievance System
 
-A simple grievance portal for organizations. Residents, families, or staff can submit a grievance, track a reference code, and administrators can review reports in a protected dashboard.
+  A user-friendly grievance portal for organizations.
 
-## What this project includes
+  This app allows residents, family members, and staff to file grievances, keep a reference code, and let administrators review and update submissions in a protected dashboard.
 
-- Submit a grievance with required name, email, relation, room/unit, category, priority, and description.
-- Client-side and server-side validation using Zod.
-- Draft auto-save in the browser so form progress is preserved.
-- Device-specific past grievance history shown on the homepage.
-- Search by reference ID from the homepage and a dropdown menu.
-- Admin login and dashboard for viewing, filtering, and updating grievances.
-- Firebase-ready storage with a local fallback when Firebase is not configured.
+  ## What you get
 
-## Run locally
+  - A clear, step-by-step grievance submission flow.
+  - Email and name validation to reduce invalid form entries.
+  - Browser draft saving, so users do not lose progress.
+  - Device-specific past grievance history on the homepage.
+  - Search by grievance reference ID directly from the homepage.
+  - Admin login and dashboard access for managing grievances.
+  - Support for Firebase Firestore storage with a local fallback when not configured.
 
-Requirements: Node.js 18+ and npm.
+  ## How it works
 
-```bash
-cd grievance-system
-npm install
-npm run dev
-```
+  1. A user opens the homepage and chooses to submit a grievance.
+  2. The grievance form collects personal details and issue details in two steps.
+  3. After submission, the flow returns a reference code.
+  4. The user can return to the homepage to view past device submissions.
+  5. The user can also look up any submission by reference code.
+  6. Admins log in to review grievance reports, filter them, and update status.
 
-Open `http://localhost:3000`.
+  ### Submission flow
 
-## Environment variables
+  ```text
+  Homepage --> Submit grievance --> Fill form step 1 --> Fill form step 2 --> Review & submit --> Success + reference code
+  ```
 
-To use Firebase storage instead of the local fallback, add these values to `.env.local`:
+  ### Admin flow
 
-- `FIREBASE_PROJECT_ID`
-- `FIREBASE_CLIENT_EMAIL`
-- `FIREBASE_PRIVATE_KEY`
-- `NEXT_PUBLIC_FIREBASE_API_KEY` (if the client app uses Firebase web APIs)
+  ```text
+  Admin login --> Dashboard --> Filter / search grievances --> View details --> Update status
+  ```
 
-For admin login, the app supports either one fallback username/password or multiple local admin accounts:
+  ## Setup
 
-- `ADMIN_USERNAME` and `ADMIN_PASSWORD` for a single local admin account.
-- `ADMIN_CREDENTIALS` for multiple local accounts, for example:
-  `ADMIN_CREDENTIALS=admin:admin123,manager:pass123`
+  ### Requirements
 
-If Firebase is configured, admin credentials can also be stored in the `admin_credentials` collection in Firestore.
+  - Node.js 18 or higher
+  - npm
 
-If Firebase is not configured, the app keeps using the local fallback storage.
+  ### Install and run
 
-## Key pages
+  ```bash
+  cd grievance-system
+  npm install
+  npm run dev
+  ```
 
-  - `/` — homepage with submit card, search-by-ID card, and device history.
-  - `/submit` — grievance submission form.
-  - `/submit/report` — lookup a grievance by reference code.
+  Open `http://localhost:3000` in the browser.
+
+  ## Environment variables
+
+  The app works in two modes:
+
+  - **Firebase mode** when Firestore environment variables are set.
+  - **Local fallback mode** when Firebase is not configured.
+
+  ### Firebase settings
+
+  Add these values to `.env.local` to enable Firestore writes:
+
+  ```env
+  FIREBASE_PROJECT_ID=your-firebase-project-id
+  FIREBASE_CLIENT_EMAIL=your-service-account-email
+  FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----"
+  ```
+
+  If you also use Firebase web SDK features, include:
+
+  ```env
+  NEXT_PUBLIC_FIREBASE_API_KEY=...
+  NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...
+  NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
+  NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=...
+  NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
+  NEXT_PUBLIC_FIREBASE_APP_ID=...
+  NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=...
+  ```
+
+  ### Admin credentials
+
+  The app supports either one local admin account or multiple local admin accounts.
+
+  #### Single fallback account
+
+  ```env
+  ADMIN_USERNAME=admin
+  ADMIN_PASSWORD=admin123
+  ```
+
+  #### Multiple local accounts
+
+  ```env
+  ADMIN_CREDENTIALS=admin:admin123,manager:pass123
+  ```
+
+  Or use JSON format:
+
+  ```env
+  ADMIN_CREDENTIALS=[{"username":"admin","password":"admin123"},{"username":"manager","password":"pass123"}]
+  ```
+
+  ### Firebase admin credentials
+
+  If Firebase is configured, admin credentials can also come from the Firestore collection `admin_credentials`.
+  Each document should include `username` and `password` fields.
+
+  ## Main pages
+
+  - `/` — homepage with quick access to submit a grievance, search by reference ID, and view device history.
+  - `/submit` — two-step grievance submission form.
+  - `/submit/report` — search for a grievance by its reference code.
   - `/admin/login` — admin login page.
-  - `/admin/dashboard` — admin grievance dashboard.
+  - `/admin/dashboard` — admin dashboard for reviewing and managing grievances.
 
-## Notes
+  ## Project structure
 
-- The submission form validates email format and restricts names to letters, spaces, apostrophes, and hyphens.
-- The admin dashboard shows grievances in a dynamic list and allows status updates without resizing cards.
-- Local browser storage preserves recent device grievances and draft progress.
+  - `app/` — Next.js routes and page components.
+  - `app/submit/` — grievance form flows and actions.
+  - `app/admin/` — admin login and dashboard.
+  - `lib/` — shared utilities, schema validation, database helpers, and auth helpers.
 
-## Folder overview
+  ## Validation details
 
-  - `app/` — Next.js app routes and page components.
-  - `app/submit/` — grievance flow, form components, and lookup page.
-  - `app/admin/` — admin login and dashboard pages.
-  - `lib/` — validation schemas, Firebase/db helpers, auth helpers, and shared utilities.
+  - Names only accept letters, spaces, apostrophes, and hyphens.
+  - Email fields must be valid email addresses.
+  - The grievance description requires a minimum length.
+  - The same Zod schema is used on the client and server.
 
-## Build
+  ## Deployment notes
 
-```bash
-npm run build
-```
+  - `npm run build` verifies the app compiles correctly.
+  - If Firebase credentials are missing, the app continues with local storage.
+  - Admin login will still work with the fallback credentials.
 
-## License
+  ## Build
 
-This project is provided as-is for internal or demonstration use.
+  ```bash
+  npm run build
+  ```
+
+  ## License
+
+  This project is provided as-is for internal or demonstration use.
