@@ -21,10 +21,15 @@ let inMemoryGrievances: Grievance[] | null = null;
 async function makeFileWritable(filePath: string): Promise<boolean> {
   try {
     await fs.mkdir(path.dirname(filePath), { recursive: true });
-    await fs.writeFile(filePath, "[]", { encoding: "utf-8", flag: "a" });
+    await fs.access(filePath, fs.constants.F_OK | fs.constants.W_OK);
     return true;
   } catch {
-    return false;
+    try {
+      await fs.writeFile(filePath, "[]", { encoding: "utf-8" });
+      return true;
+    } catch {
+      return false;
+    }
   }
 }
 
@@ -64,7 +69,6 @@ export async function getAllGrievances(): Promise<Grievance[]> {
     return fileData;
   }
 
-  inMemoryGrievances = [];
   return [];
 }
 
