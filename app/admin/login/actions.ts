@@ -14,7 +14,7 @@ export async function loginAction(
   const username = String(formData.get("username") || "");
   const password = String(formData.get("password") || "");
 
-  if (!validateCredentials(username, password)) {
+  if (!(await validateCredentials(username, password))) {
     return { error: "Invalid username or password." };
   }
 

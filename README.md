@@ -41,6 +41,13 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+If you want the app to store grievances and admin credentials in Firebase instead of the local JSON fallback, set these env vars before running:
+
+- `FIREBASE_PROJECT_ID`
+- `FIREBASE_CLIENT_EMAIL`
+- `FIREBASE_PRIVATE_KEY`
+- `GOOGLE_APPLICATION_CREDENTIALS` (optional alternative to the above)
+
 - Submit a grievance at `/submit`
 - Sign in to the admin dashboard at `/admin/login`
   (configure admin credentials in `.env.local`)

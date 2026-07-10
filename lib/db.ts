@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import os from "os";
 import path from "path";
 import { Grievance, GrievanceStatus } from "./types";
+import { getFirestoreDb } from "./firebaseAdmin";
 
 /**
  * Storage note (for reviewers):
@@ -57,9 +58,59 @@ async function readFileData(filePath: string): Promise<Grievance[] | null> {
   }
 }
 
+function resolvePrivateKey(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  return value.includes("\n") ? value : value.replace(/\\n/g, "\n");
+}
+
+async function getRemoteGrievances(): Promise<Grievance[] | null> {
+  const firestore = getFirestoreDb();
+  if (!firestore) return null;
+
+  const snapshot = await firestore
+    .collection("grievances")
+    .orderBy("createdAt", "desc")
+    .get();
+
+  return snapshot.docs.map((doc) => {
+    const data = doc.data() as Grievance;
+    return {
+      ...data,
+      id: data.id || doc.id,
+    };
+  });
+}
+
+export function isUsingFirestore(): boolean {
+  return getFirestoreDb() !== null;
+}
+
+export function getFirestoreConfigStatus(): { configured: boolean; missing: string[] } {
+  const hasAppCredential = Boolean(process.env.GOOGLE_APPLICATION_CREDENTIALS?.trim());
+  const projectId = process.env.FIREBASE_PROJECT_ID;
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+  const privateKey = resolvePrivateKey(process.env.FIREBASE_PRIVATE_KEY);
+
+  if (hasAppCredential) {
+    return { configured: true, missing: [] };
+  }
+
+  const missing: string[] = [];
+  if (!projectId) missing.push("FIREBASE_PROJECT_ID");
+  if (!clientEmail) missing.push("FIREBASE_CLIENT_EMAIL");
+  if (!privateKey) missing.push("FIREBASE_PRIVATE_KEY");
+
+  return { configured: missing.length === 0, missing };
+}
+
 export async function getAllGrievances(): Promise<Grievance[]> {
   if (inMemoryGrievances) {
     return [...inMemoryGrievances];
+  }
+
+  const remote = await getRemoteGrievances();
+  if (remote) {
+    return remote;
   }
 
   const filePath = await getDataFilePath();
@@ -72,7 +123,28 @@ export async function getAllGrievances(): Promise<Grievance[]> {
   return [];
 }
 
+async function addRemoteGrievance(grievance: Grievance): Promise<void> {
+  const firestore = getFirestoreDb();
+  if (!firestore) return;
+
+  await firestore.collection("grievances").doc(grievance.id).set(grievance);
+}
+
+async function updateRemoteGrievanceStatus(id: string, status: GrievanceStatus): Promise<void> {
+  const firestore = getFirestoreDb();
+  if (!firestore) return;
+
+  const docRef = firestore.collection("grievances").doc(id);
+  await docRef.update({ status });
+}
+
 export async function addGrievance(grievance: Grievance): Promise<void> {
+  const firestore = getFirestoreDb();
+  if (firestore) {
+    await addRemoteGrievance(grievance);
+    return;
+  }
+
   const all = await getAllGrievances();
   const next = [grievance, ...all];
 
@@ -94,6 +166,12 @@ export async function updateGrievanceStatus(
   id: string,
   status: GrievanceStatus
 ): Promise<void> {
+  const firestore = getFirestoreDb();
+  if (firestore) {
+    await updateRemoteGrievanceStatus(id, status);
+    return;
+  }
+
   const all = await getAllGrievances();
   const index = all.findIndex((g) => g.id === id);
   if (index === -1) return;

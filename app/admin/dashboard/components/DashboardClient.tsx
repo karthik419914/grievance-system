@@ -11,6 +11,7 @@ import FilterBar, { Filters, SortOrder } from "./FilterBar";
 import GrievanceTable from "./GrievanceTable";
 import GrievanceDetailDialog from "./GrievanceDetailDialog";
 import StatCards from "./StatCards";
+import Alert from "@mui/material/Alert";
 
 const defaultFilters: Filters = {
   priority: "all",
@@ -21,8 +22,14 @@ const defaultFilters: Filters = {
 
 export default function DashboardClient({
   initialGrievances,
+  usingFirestore,
+  firestoreConfigured,
+  firestoreMissing,
 }: {
   initialGrievances: Grievance[];
+  usingFirestore?: boolean;
+  firestoreConfigured?: boolean;
+  firestoreMissing?: string[];
 }) {
   const [grievances, setGrievances] = useState<Grievance[]>(initialGrievances);
   const [filters, setFilters] = useState<Filters>(defaultFilters);
@@ -71,6 +78,19 @@ export default function DashboardClient({
       <Typography variant="h4" gutterBottom>
         Grievances
       </Typography>
+      {usingFirestore !== undefined && (
+        <Alert severity={usingFirestore ? "success" : "info"} sx={{ mb: 3 }}>
+          {usingFirestore
+            ? "Connected to Firebase Firestore for grievances."
+            : "Using local JSON fallback storage because Firebase is not configured."}
+        </Alert>
+      )}
+      {usingFirestore === false && firestoreConfigured === false && firestoreMissing && firestoreMissing.length > 0 && (
+        <Alert severity="warning" sx={{ mb: 3 }}>
+          Firestore is disabled because the following server env vars are missing: {firestoreMissing.join(", ")}.
+          Add them to .env.local and restart the app.
+        </Alert>
+      )}
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
         {grievances.length} total submissions
       </Typography>

@@ -1,4 +1,4 @@
-import { getAllGrievances } from "@/lib/db";
+import { getAllGrievances, getFirestoreConfigStatus, isUsingFirestore } from "@/lib/db";
 import DashboardClient from "./components/DashboardClient";
 
 export const metadata = {
@@ -9,6 +9,15 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
   const grievances = await getAllGrievances();
+  const usingFirestore = isUsingFirestore();
+  const firestoreStatus = getFirestoreConfigStatus();
 
-  return <DashboardClient initialGrievances={grievances} />;
+  return (
+    <DashboardClient
+      initialGrievances={grievances}
+      usingFirestore={usingFirestore}
+      firestoreConfigured={firestoreStatus.configured}
+      firestoreMissing={firestoreStatus.missing}
+    />
+  );
 }
