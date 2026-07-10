@@ -16,6 +16,7 @@ import SuccessScreen from "./SuccessScreen";
 import { useDraft } from "../useDraft";
 import { submitGrievance } from "../actions";
 import { StepOneData, StepTwoData, GrievanceFormData } from "@/lib/schema";
+import { appendGrievanceHistory } from "@/lib/storage";
 
 const steps = ["Your Details", "Grievance Details", "Review & Submit"];
 
@@ -51,6 +52,11 @@ export default function GrievanceForm() {
     setActiveStep(2);
   };
 
+  const handleStepTwoBack = (values: StepTwoData) => {
+    save({ ...data, ...values });
+    setActiveStep(0);
+  };
+
   const handleBack = () => setActiveStep((step) => Math.max(0, step - 1));
 
   const handleSubmit = () => {
@@ -58,6 +64,13 @@ export default function GrievanceForm() {
     startTransition(async () => {
       const result = await submitGrievance(data);
       if (result.success) {
+        appendGrievanceHistory({
+          referenceCode: result.referenceCode,
+          createdAt: new Date().toISOString(),
+          submitterName: (data.submitterName || "Unknown") as string,
+          category: (data.category || "other") as string,
+          description: (data.description || "") as string,
+        });
         clear();
         setSubmittedCode(result.referenceCode);
       } else {
@@ -105,7 +118,7 @@ export default function GrievanceForm() {
       {activeStep === 0 && <StepOne defaultValues={data} onNext={handleStepOneNext} />}
 
       {activeStep === 1 && (
-        <StepTwo defaultValues={data} onNext={handleStepTwoNext} onBack={handleBack} />
+        <StepTwo defaultValues={data} onNext={handleStepTwoNext} onBack={handleStepTwoBack} />
       )}
 
       {activeStep === 2 && (

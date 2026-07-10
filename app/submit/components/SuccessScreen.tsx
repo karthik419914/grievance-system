@@ -51,9 +51,6 @@ export default function SuccessScreen({ referenceCode }: { referenceCode: string
         <Button component={Link} href="/" variant="contained" size="large">
           Back to Home
         </Button>
-        <Button component={Link} href="/submit/report" variant="outlined" size="large">
-          Search report
-        </Button>
       </Stack>
     </Paper>
   );

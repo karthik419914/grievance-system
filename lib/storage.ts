@@ -1,3 +1,13 @@
+export interface DeviceGrievanceHistoryItem {
+  referenceCode: string;
+  createdAt: string;
+  submitterName: string;
+  category: string;
+  description: string;
+}
+
+const GRIEVANCE_HISTORY_KEY = "grievance_system_history_v1";
+
 export function getBrowserStorage(): Storage | null {
   if (typeof window === "undefined") return null;
 
@@ -43,4 +53,28 @@ export function removeStoredValue(key: string) {
   } catch {
     // ignore storage errors
   }
+}
+
+export function getGrievanceHistory(): DeviceGrievanceHistoryItem[] {
+  const raw = getStoredValue(GRIEVANCE_HISTORY_KEY);
+  if (!raw) return [];
+
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed.filter(
+      (item): item is DeviceGrievanceHistoryItem =>
+        item && typeof item.referenceCode === "string" && typeof item.createdAt === "string"
+    );
+  } catch {
+    return [];
+  }
+}
+
+export function appendGrievanceHistory(entry: DeviceGrievanceHistoryItem) {
+  const existing = getGrievanceHistory();
+  const withoutDuplicate = existing.filter((item) => item.referenceCode !== entry.referenceCode);
+  const next = [entry, ...withoutDuplicate].slice(0, 20);
+  setStoredValue(GRIEVANCE_HISTORY_KEY, JSON.stringify(next));
 }

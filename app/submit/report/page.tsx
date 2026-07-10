@@ -50,7 +50,7 @@ export default function ReportLookupPage() {
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default", py: { xs: 4, sm: 8 } }}>
       <Container maxWidth="sm">
         <Typography variant="h4" gutterBottom>
-          Search report
+          Search My Report
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
           Enter the code shown after submission to view the status of your report.

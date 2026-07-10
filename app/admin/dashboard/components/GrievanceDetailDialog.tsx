@@ -52,7 +52,7 @@ export default function GrievanceDetailDialog({
       <DialogTitle>
         Grievance Details
         <Typography variant="caption" color="text.secondary" display="block">
-          Reference: {grievance.id}
+          Reference: {grievance.referenceCode}
         </Typography>
       </DialogTitle>
       <DialogContent dividers>

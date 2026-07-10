@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Box from "@mui/material/Box";
@@ -19,7 +20,7 @@ import {
 interface StepTwoProps {
   defaultValues: Partial<StepTwoData>;
   onNext: (values: StepTwoData) => void;
-  onBack: () => void;
+  onBack: (values: StepTwoData) => void;
 }
 
 const categoryOptions = Object.entries(CATEGORY_LABELS) as [
@@ -37,6 +38,8 @@ export default function StepTwo({ defaultValues, onNext, onBack }: StepTwoProps)
     register,
     control,
     handleSubmit,
+    getValues,
+    reset,
     formState: { errors },
   } = useForm<StepTwoData>({
     resolver: zodResolver(stepTwoSchema),
@@ -46,6 +49,14 @@ export default function StepTwo({ defaultValues, onNext, onBack }: StepTwoProps)
       description: defaultValues.description ?? "",
     },
   });
+
+  useEffect(() => {
+    reset({
+      category: defaultValues.category,
+      priority: defaultValues.priority,
+      description: defaultValues.description ?? "",
+    });
+  }, [defaultValues, reset]);
 
   return (
     <Box component="form" onSubmit={handleSubmit(onNext)} noValidate>
@@ -110,7 +121,7 @@ export default function StepTwo({ defaultValues, onNext, onBack }: StepTwoProps)
       </Stack>
 
       <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
-        <Button onClick={onBack} size="large">
+        <Button onClick={() => onBack(getValues() as StepTwoData)} size="large">
           Back
         </Button>
         <Button type="submit" variant="contained" size="large">

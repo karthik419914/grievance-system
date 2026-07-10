@@ -41,7 +41,7 @@ export default function AdminLoginPage() {
         elevation={0}
         sx={{
           p: { xs: 4, sm: 5 },
-          maxWidth: 420,
+          maxWidth: { xs: "100%", sm: 560, md: 640 },
           width: "100%",
           borderRadius: 3,
           border: "1px solid",

@@ -81,7 +81,7 @@ export default function DashboardClient({
       {usingFirestore !== undefined && (
         <Alert severity={usingFirestore ? "success" : "info"} sx={{ mb: 3 }}>
           {usingFirestore
-            ? "Connected to Firebase Firestore for grievances."
+            ? "Grievances are available."
             : "Using local JSON fallback storage because Firebase is not configured."}
         </Alert>
       )}
@@ -107,7 +107,7 @@ export default function DashboardClient({
           sortOrder={sortOrder}
           onSortOrderChange={setSortOrder}
         />
-
+ 
         <Stack sx={{ mt: 2 }}>
           <GrievanceTable grievances={filtered} onRowClick={setSelected} />
         </Stack>

@@ -38,9 +38,9 @@ export default function SubmitPage() {
         </Typography>
 
         <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2, mb: 4 }}>
-          <Button component={Link} href="/submit/report" variant="outlined" fullWidth>
-            Search report
-          </Button>
+          <Typography variant="body2" color="text.secondary" sx={{ flex: 1, alignSelf: "center" }}>
+            Use this page to submit a new grievance. Your draft is saved automatically while you complete the form.
+          </Typography>
         </Box>
 
         <GrievanceForm />

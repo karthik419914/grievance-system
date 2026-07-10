@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Box from "@mui/material/Box";
@@ -26,6 +27,7 @@ export default function StepOne({ defaultValues, onNext }: StepOneProps) {
     register,
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<StepOneData>({
     resolver: zodResolver(stepOneSchema),
@@ -37,6 +39,16 @@ export default function StepOne({ defaultValues, onNext }: StepOneProps) {
       contactPhone: defaultValues.contactPhone ?? "",
     },
   });
+
+  useEffect(() => {
+    reset({
+      submitterName: defaultValues.submitterName ?? "",
+      email: defaultValues.email ?? "",
+      relation: defaultValues.relation,
+      roomNumber: defaultValues.roomNumber ?? "",
+      contactPhone: defaultValues.contactPhone ?? "",
+    });
+  }, [defaultValues, reset]);
 
   return (
     <Box component="form" onSubmit={handleSubmit(onNext)} noValidate>

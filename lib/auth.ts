@@ -11,40 +11,82 @@ interface AdminCredentials {
   password: string;
 }
 
-async function fetchAdminCredentials(): Promise<AdminCredentials> {
+function parseAdminCredentialsEnv(): AdminCredentials[] {
+  const raw = process.env.ADMIN_CREDENTIALS?.trim();
+  if (!raw) {
+    return [
+      { username: DEFAULT_ADMIN_USERNAME, password: DEFAULT_ADMIN_PASSWORD },
+    ];
+  }
+
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      const list = parsed
+        .filter(
+          (item): item is { username: string; password: string } =>
+            typeof item === "object" && item !== null &&
+            typeof (item as any).username === "string" &&
+            typeof (item as any).password === "string"
+        )
+        .map((item) => ({ username: item.username, password: item.password }));
+      if (list.length > 0) {
+        return list;
+      }
+    }
+  } catch {
+    // Ignore JSON parse errors and fall back to comma-separated parsing.
+  }
+
+  const pairs = raw.split(",").map((entry) => entry.trim()).filter(Boolean);
+  const creds = pairs
+    .map((pair) => {
+      const [username, password] = pair.split(":");
+      if (!username || !password) {
+        return null;
+      }
+      return { username: username.trim(), password: password.trim() };
+    })
+    .filter((item): item is AdminCredentials => item !== null);
+
+  return creds.length > 0
+    ? creds
+    : [
+        { username: DEFAULT_ADMIN_USERNAME, password: DEFAULT_ADMIN_PASSWORD },
+      ];
+}
+
+async function fetchAdminCredentials(): Promise<AdminCredentials[]> {
   const firestore = getFirestoreDb();
   if (!firestore) {
-    return {
-      username: DEFAULT_ADMIN_USERNAME,
-      password: DEFAULT_ADMIN_PASSWORD,
-    };
+    return parseAdminCredentialsEnv();
   }
 
-  const credRef = firestore.collection("admin_credentials").doc("default");
-  const snapshot = await credRef.get();
+  const snapshot = await firestore.collection("admin_credentials").get();
+  const creds: AdminCredentials[] = [];
 
-  if (snapshot.exists) {
-    const data = snapshot.data();
-    if (data?.username && data?.password) {
-      return {
-        username: String(data.username),
-        password: String(data.password),
-      };
+  snapshot.forEach((doc) => {
+    const data = doc.data();
+    if (typeof data.username === "string" && typeof data.password === "string") {
+      creds.push({ username: data.username, password: data.password });
+    } else if (typeof data.password === "string") {
+      creds.push({ username: doc.id, password: data.password });
     }
+  });
+
+  if (creds.length > 0) {
+    return creds;
   }
 
-  const fallback = {
-    username: DEFAULT_ADMIN_USERNAME,
-    password: DEFAULT_ADMIN_PASSWORD,
-  };
-
-  await credRef.set(fallback, { merge: true });
+  const fallback = parseAdminCredentialsEnv();
+  const defaultCred = fallback[0];
+  await firestore.collection("admin_credentials").doc("default").set(defaultCred, { merge: true });
   return fallback;
 }
 
 export async function validateCredentials(username: string, password: string): Promise<boolean> {
   const creds = await fetchAdminCredentials();
-  return username === creds.username && password === creds.password;
+  return creds.some((cred) => cred.username === username && cred.password === password);
 }
 
 export async function createSession(): Promise<void> {

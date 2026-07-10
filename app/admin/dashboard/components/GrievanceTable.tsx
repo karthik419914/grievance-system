@@ -32,7 +32,7 @@ export default function GrievanceTable({ grievances, onRowClick }: GrievanceTabl
 
   return (
     <TableContainer>
-      <Table size="small">
+      <Table size="small" sx={{ '& th, & td': { fontSize: '0.95rem' } }}>
         <TableHead>
           <TableRow>
             <TableCell>Submitted By</TableCell>
