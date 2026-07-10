@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -9,7 +10,6 @@ import Paper from "@mui/material/Paper";
 import { Grievance } from "@/lib/types";
 import FilterBar, { Filters, SortOrder } from "./FilterBar";
 import GrievanceTable from "./GrievanceTable";
-import GrievanceDetailDialog from "./GrievanceDetailDialog";
 import StatCards from "./StatCards";
 import Alert from "@mui/material/Alert";
 
@@ -31,13 +31,12 @@ export default function DashboardClient({
   firestoreConfigured?: boolean;
   firestoreMissing?: string[];
 }) {
-  const [grievances, setGrievances] = useState<Grievance[]>(initialGrievances);
+  const router = useRouter();
   const [filters, setFilters] = useState<Filters>(defaultFilters);
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
-  const [selected, setSelected] = useState<Grievance | null>(null);
 
   const filtered = useMemo(() => {
-    let result = [...grievances];
+    let result = [...initialGrievances];
 
     if (filters.priority !== "all") {
       result = result.filter((g) => g.priority === filters.priority);
@@ -66,12 +65,9 @@ export default function DashboardClient({
     });
 
     return result;
-  }, [grievances, filters, sortOrder]);
+  }, [initialGrievances, filters, sortOrder]);
 
-  const handleStatusUpdated = (id: string, status: Grievance["status"]) => {
-    setGrievances((prev) => prev.map((g) => (g.id === id ? { ...g, status } : g)));
-    setSelected((prev) => (prev && prev.id === id ? { ...prev, status } : prev));
-  };
+  // Status updates handled on details page
 
   return (
     <Box>
@@ -92,10 +88,10 @@ export default function DashboardClient({
         </Alert>
       )}
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        {grievances.length} total submissions
+        {initialGrievances.length} total submissions
       </Typography>
 
-      <StatCards grievances={grievances} />
+      <StatCards grievances={initialGrievances} />
 
       <Paper
         elevation={0}
@@ -109,15 +105,9 @@ export default function DashboardClient({
         />
  
         <Stack sx={{ mt: 2 }}>
-          <GrievanceTable grievances={filtered} onRowClick={setSelected} />
+          <GrievanceTable grievances={filtered} onRowClick={(g) => router.push(`/admin/dashboard/${g.id}`)} />
         </Stack>
       </Paper>
-
-      <GrievanceDetailDialog
-        grievance={selected}
-        onClose={() => setSelected(null)}
-        onStatusUpdated={handleStatusUpdated}
-      />
     </Box>
   );
 }

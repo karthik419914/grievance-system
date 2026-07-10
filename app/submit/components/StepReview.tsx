@@ -23,6 +23,7 @@ interface StepReviewProps {
   onEditStep: (step: number) => void;
   onSubmit: () => void;
   submitting: boolean;
+  onSaveDraft: () => void;
 }
 
 function ReviewRow({ label, value }: { label: string; value: string }) {
@@ -44,6 +45,7 @@ export default function StepReview({
   onEditStep,
   onSubmit,
   submitting,
+  onSaveDraft,
 }: StepReviewProps) {
   return (
     <Box>
@@ -113,9 +115,14 @@ export default function StepReview({
         <Button onClick={onBack} size="large" disabled={submitting}>
           Back
         </Button>
-        <Button onClick={onSubmit} variant="contained" size="large" disabled={submitting}>
-          {submitting ? "Submitting..." : "Submit Grievance"}
-        </Button>
+        <Stack direction="row" spacing={2}>
+          <Button variant="outlined" onClick={onSaveDraft} disabled={submitting} sx={{ textTransform: "none" }}>
+            Save Draft
+          </Button>
+          <Button onClick={onSubmit} variant="contained" size="large" disabled={submitting}>
+            {submitting ? "Submitting..." : "Submit Grievance"}
+          </Button>
+        </Stack>
       </Box>
     </Box>
   );

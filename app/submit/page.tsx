@@ -14,21 +14,21 @@ export default function SubmitPage() {
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default", py: { xs: 4, sm: 8 } }}>
       <Container maxWidth="sm">
-        <Box
+        <Button
           component={Link}
           href="/"
+          variant="outlined"
+          color="primary"
+          startIcon={<ArrowBackIcon />}
           sx={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 0.5,
             mb: 3,
-            color: "text.secondary",
-            fontSize: "0.9rem",
+            textTransform: "none",
+            borderRadius: 2,
+            fontWeight: 600,
           }}
         >
-          <ArrowBackIcon fontSize="small" />
           Back to home
-        </Box>
+        </Button>
 
         <Typography variant="h4" gutterBottom>
           Submit a Grievance

@@ -15,6 +15,7 @@ import { stepOneSchema, StepOneData, RELATION_LABELS } from "@/lib/schema";
 interface StepOneProps {
   defaultValues: Partial<StepOneData>;
   onNext: (values: StepOneData) => void;
+  onSaveDraft: (values: Partial<StepOneData>) => void;
 }
 
 const relationOptions = Object.entries(RELATION_LABELS) as [
@@ -22,12 +23,13 @@ const relationOptions = Object.entries(RELATION_LABELS) as [
   string
 ][];
 
-export default function StepOne({ defaultValues, onNext }: StepOneProps) {
+export default function StepOne({ defaultValues, onNext, onSaveDraft }: StepOneProps) {
   const {
     register,
     control,
     handleSubmit,
     reset,
+    getValues,
     formState: { errors },
   } = useForm<StepOneData>({
     resolver: zodResolver(stepOneSchema),
@@ -114,7 +116,10 @@ export default function StepOne({ defaultValues, onNext }: StepOneProps) {
         />
       </Stack>
 
-      <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 4 }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
+        <Button variant="outlined" onClick={() => onSaveDraft(getValues())} sx={{ textTransform: "none" }}>
+          Save Draft
+        </Button>
         <Button type="submit" variant="contained" size="large">
           Next
         </Button>

@@ -21,6 +21,7 @@ interface StepTwoProps {
   defaultValues: Partial<StepTwoData>;
   onNext: (values: StepTwoData) => void;
   onBack: (values: StepTwoData) => void;
+  onSaveDraft: (values: Partial<StepTwoData>) => void;
 }
 
 const categoryOptions = Object.entries(CATEGORY_LABELS) as [
@@ -33,7 +34,7 @@ const priorityOptions = Object.entries(PRIORITY_LABELS) as [
   string
 ][];
 
-export default function StepTwo({ defaultValues, onNext, onBack }: StepTwoProps) {
+export default function StepTwo({ defaultValues, onNext, onBack, onSaveDraft }: StepTwoProps) {
   const {
     register,
     control,
@@ -124,9 +125,14 @@ export default function StepTwo({ defaultValues, onNext, onBack }: StepTwoProps)
         <Button onClick={() => onBack(getValues() as StepTwoData)} size="large">
           Back
         </Button>
-        <Button type="submit" variant="contained" size="large">
-          Next
-        </Button>
+        <Stack direction="row" spacing={2}>
+          <Button variant="outlined" onClick={() => onSaveDraft(getValues() as Partial<StepTwoData>)} sx={{ textTransform: "none" }}>
+            Save Draft
+          </Button>
+          <Button type="submit" variant="contained" size="large">
+            Next
+          </Button>
+        </Stack>
       </Box>
     </Box>
   );

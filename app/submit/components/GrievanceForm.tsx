@@ -6,6 +6,7 @@ import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 
@@ -39,8 +40,14 @@ export default function GrievanceForm() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submittedCode, setSubmittedCode] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [draftSavedOpen, setDraftSavedOpen] = useState(false);
 
   const { data, save, clear, loaded } = useDraft<Partial<GrievanceFormData>>(emptyData);
+
+  const handleSaveDraft = (stepData: Partial<GrievanceFormData>) => {
+    save({ ...data, ...stepData });
+    setDraftSavedOpen(true);
+  };
 
   const handleStepOneNext = (values: StepOneData) => {
     save({ ...data, ...values });
@@ -115,10 +122,17 @@ export default function GrievanceForm() {
         </Alert>
       )}
 
-      {activeStep === 0 && <StepOne defaultValues={data} onNext={handleStepOneNext} />}
+      {activeStep === 0 && (
+        <StepOne defaultValues={data} onNext={handleStepOneNext} onSaveDraft={handleSaveDraft} />
+      )}
 
       {activeStep === 1 && (
-        <StepTwo defaultValues={data} onNext={handleStepTwoNext} onBack={handleStepTwoBack} />
+        <StepTwo
+          defaultValues={data}
+          onNext={handleStepTwoNext}
+          onBack={handleStepTwoBack}
+          onSaveDraft={handleSaveDraft}
+        />
       )}
 
       {activeStep === 2 && (
@@ -128,8 +142,20 @@ export default function GrievanceForm() {
           onEditStep={setActiveStep}
           onSubmit={handleSubmit}
           submitting={isPending}
+          onSaveDraft={() => handleSaveDraft(data)}
         />
       )}
+
+      <Snackbar
+        open={draftSavedOpen}
+        autoHideDuration={3000}
+        onClose={() => setDraftSavedOpen(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert onClose={() => setDraftSavedOpen(false)} severity="success" variant="filled" sx={{ width: "100%", borderRadius: 2 }}>
+          Draft saved successfully!
+        </Alert>
+      </Snackbar>
     </Paper>
   );
 }
