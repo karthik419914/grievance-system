@@ -1,0 +1,88 @@
+[
+  {
+    "id": "6ca786ac-d50b-4356-92ea-be40aefbba83",
+    "submitterName": "karthik",
+    "email": "karhik@gmial.com",
+    "relation": "resident",
+    "roomNumber": "14",
+    "contactPhone": "",
+    "category": "cleanliness",
+    "priority": "urgent",
+    "description": "kusgldfkfkljbd;kasbfkgbl",
+    "status": "new",
+    "createdAt": "2026-07-10T12:07:43.958Z"
+  },
+  {
+    "id": "d52b23c9-d95b-4c3a-9202-35fd181a5839",
+    "submitterName": "hello world",
+    "email": "karthik1221121232@gmail.com",
+    "relation": "staff",
+    "roomNumber": "14",
+    "contactPhone": "",
+    "category": "cleanliness",
+    "priority": "urgent",
+    "description": "sjdbfklasbdfkdblk",
+    "status": "new",
+    "createdAt": "2026-07-10T11:45:55.096Z"
+  },
+  {
+    "id": "1c5ea9cd-dddb-400b-b8df-0144f5c7ad16",
+    "submitterName": "karthik reddy",
+    "relation": "resident",
+    "roomNumber": "14",
+    "contactPhone": "8885457626",
+    "category": "other",
+    "priority": "urgent",
+    "description": "hello world",
+    "status": "new",
+    "createdAt": "2026-07-10T11:34:05.995Z"
+  },
+  {
+    "id": "8f14e45f-ceea-4d8f-8ab5-1a2b3c4d5e6f",
+    "submitterName": "Meera Krishnan",
+    "relation": "family_member",
+    "roomNumber": "B-204",
+    "contactPhone": "9876543210",
+    "category": "safety",
+    "priority": "urgent",
+    "description": "The handrail near the bathroom in my mother's room is loose and wobbles. She almost lost her balance yesterday while holding onto it. Please fix this urgently.",
+    "status": "new",
+    "createdAt": "2026-07-09T08:12:00.000Z"
+  },
+  {
+    "id": "c9a8b7d6-e5f4-4321-9876-abcdef012345",
+    "submitterName": "Ramesh Iyer",
+    "relation": "resident",
+    "roomNumber": "A-112",
+    "contactPhone": "",
+    "category": "food_and_dining",
+    "priority": "medium",
+    "description": "Lunch has been served cold for the past three days. It would help to have it served warmer, especially the rice and dal.",
+    "status": "in_review",
+    "createdAt": "2026-07-08T13:45:00.000Z"
+  },
+  {
+    "id": "1a2b3c4d-5e6f-7890-abcd-ef0123456789",
+    "submitterName": "Sunita Rao",
+    "relation": "family_member",
+    "roomNumber": "C-301",
+    "contactPhone": "9123456780",
+    "category": "staff_behavior",
+    "priority": "high",
+    "description": "One of the night shift caretakers was dismissive when we asked about my father's medication schedule. We'd appreciate a follow-up conversation with the care team.",
+    "status": "new",
+    "createdAt": "2026-07-07T19:20:00.000Z"
+  },
+  {
+    "id": "9f8e7d6c-5b4a-3210-9876-fedcba098765",
+    "submitterName": "Anand Ghosh",
+    "relation": "resident",
+    "roomNumber": "A-108",
+    "contactPhone": "",
+    "category": "cleanliness",
+    "priority": "low",
+    "description": "The corridor outside my room could be swept a bit more often. Not urgent, just a small note.",
+    "status": "in_review",
+    "createdAt": "2026-07-02T10:05:00.000Z"
+  }
+]
