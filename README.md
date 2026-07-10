@@ -121,10 +121,3 @@ NEXT_PUBLIC_FIREBASE_APP_ID=...
 NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=...
 ```
 
-### 2. Fallback Administrator Settings
-If Firebase is not configured, the application falls back to local memory and uses these credentials:
-```env
-ADMIN_USERNAME=karthik419914@gmail.com
-ADMIN_PASSWORD=123456
-```
-*(Note: `.env.local` is gitignored and will never be committed to your repository).*
