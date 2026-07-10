@@ -3,8 +3,8 @@ import { getFirestoreDb } from "./firebaseAdmin";
 
 export const SESSION_COOKIE = "grievance_admin_session";
 
-const DEFAULT_ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
-const DEFAULT_ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+const DEFAULT_ADMIN_USERNAME = process.env.ADMIN_USERNAME || "karthik419914@gmail.com";
+const DEFAULT_ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "123456";
 
 interface AdminCredentials {
   username: string;
@@ -80,7 +80,7 @@ async function fetchAdminCredentials(): Promise<AdminCredentials[]> {
 
   const fallback = parseAdminCredentialsEnv();
   const defaultCred = fallback[0];
-  await firestore.collection("admin_credentials").doc("default").set(defaultCred, { merge: true });
+  await firestore.collection("admin_credentials").doc(defaultCred.username).set(defaultCred, { merge: true });
   return fallback;
 }
 
@@ -89,9 +89,9 @@ export async function validateCredentials(username: string, password: string): P
   return creds.some((cred) => cred.username === username && cred.password === password);
 }
 
-export async function createSession(): Promise<void> {
+export async function createSession(username: string): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.set(SESSION_COOKIE, "authenticated", {
+  cookieStore.set(SESSION_COOKIE, username.trim().toLowerCase(), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -107,5 +107,16 @@ export async function destroySession(): Promise<void> {
 
 export async function isAuthenticated(): Promise<boolean> {
   const cookieStore = await cookies();
-  return cookieStore.get(SESSION_COOKIE)?.value === "authenticated";
+  const val = cookieStore.get(SESSION_COOKIE)?.value;
+  return !!val && val !== "";
+}
+
+export async function getLoggedInAdminEmail(): Promise<string | null> {
+  const cookieStore = await cookies();
+  return cookieStore.get(SESSION_COOKIE)?.value || null;
+}
+
+export async function isMainAdmin(): Promise<boolean> {
+  const email = await getLoggedInAdminEmail();
+  return email === "karthik419914@gmail.com";
 }

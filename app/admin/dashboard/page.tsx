@@ -1,4 +1,5 @@
 import { getAllGrievances, getFirestoreConfigStatus, isUsingFirestore } from "@/lib/db";
+import { isMainAdmin } from "@/lib/auth";
 import DashboardClient from "./components/DashboardClient";
 
 export const metadata = {
@@ -11,6 +12,7 @@ export default async function AdminDashboardPage() {
   const grievances = await getAllGrievances();
   const usingFirestore = isUsingFirestore();
   const firestoreStatus = getFirestoreConfigStatus();
+  const isMain = await isMainAdmin();
 
   return (
     <DashboardClient
@@ -18,6 +20,7 @@ export default async function AdminDashboardPage() {
       usingFirestore={usingFirestore}
       firestoreConfigured={firestoreStatus.configured}
       firestoreMissing={firestoreStatus.missing}
+      isMainAdmin={isMain}
     />
   );
 }

@@ -18,6 +18,6 @@ export async function loginAction(
     return { error: "Invalid username or password." };
   }
 
-  await createSession();
+  await createSession(username);
   redirect("/admin/dashboard");
 }

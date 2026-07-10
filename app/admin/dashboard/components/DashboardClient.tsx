@@ -6,12 +6,14 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
 
 import { Grievance } from "@/lib/types";
 import FilterBar, { Filters, SortOrder } from "./FilterBar";
 import GrievanceTable from "./GrievanceTable";
 import StatCards from "./StatCards";
 import Alert from "@mui/material/Alert";
+import ManageAdminsDialog from "./ManageAdminsDialog";
 
 const defaultFilters: Filters = {
   priority: "all",
@@ -25,15 +27,18 @@ export default function DashboardClient({
   usingFirestore,
   firestoreConfigured,
   firestoreMissing,
+  isMainAdmin,
 }: {
   initialGrievances: Grievance[];
   usingFirestore?: boolean;
   firestoreConfigured?: boolean;
   firestoreMissing?: string[];
+  isMainAdmin: boolean;
 }) {
   const router = useRouter();
   const [filters, setFilters] = useState<Filters>(defaultFilters);
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
+  const [isManageAdminsOpen, setIsManageAdminsOpen] = useState(false);
 
   const filtered = useMemo(() => {
     let result = [...initialGrievances];
@@ -71,9 +76,27 @@ export default function DashboardClient({
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
-        Grievances
-      </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 2, mb: 3 }}>
+        <Box>
+          <Typography variant="h4" fontWeight={700} gutterBottom sx={{ mb: 0.5 }}>
+            Grievances
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {initialGrievances.length} total submissions
+          </Typography>
+        </Box>
+        {isMainAdmin && (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setIsManageAdminsOpen(true)}
+            sx={{ textTransform: "none", fontWeight: 600, borderRadius: 2 }}
+          >
+            Manage Admins
+          </Button>
+        )}
+      </Box>
+
       {usingFirestore !== undefined && (
         <Alert severity={usingFirestore ? "success" : "info"} sx={{ mb: 3 }}>
           {usingFirestore
@@ -87,9 +110,6 @@ export default function DashboardClient({
           Add them to .env.local and restart the app.
         </Alert>
       )}
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        {initialGrievances.length} total submissions
-      </Typography>
 
       <StatCards grievances={initialGrievances} />
 
@@ -108,6 +128,7 @@ export default function DashboardClient({
           <GrievanceTable grievances={filtered} onRowClick={(g) => router.push(`/admin/dashboard/${g.id}`)} />
         </Stack>
       </Paper>
+      <ManageAdminsDialog open={isManageAdminsOpen} onClose={() => setIsManageAdminsOpen(false)} />
     </Box>
   );
 }
