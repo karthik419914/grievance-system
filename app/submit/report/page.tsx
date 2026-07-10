@@ -117,12 +117,9 @@ export default function ReportLookupPage() {
           )}
         </Paper>
 
-        <Box sx={{ mt: 4, display: "flex", justifyContent: "space-between", gap: 2 }}>
+        <Box sx={{ mt: 4, display: "flex", justifyContent: "flex-start", gap: 2 }}>
           <Button component={Link} href="/" variant="outlined">
             Back to home
-          </Button>
-          <Button component={Link} href="/submit/history" variant="outlined">
-            View my submissions
           </Button>
         </Box>
       </Container>

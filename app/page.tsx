@@ -38,9 +38,6 @@ export default function HomePage() {
         </Typography>
 
        <Box sx={{ mt: 4, display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2 }}>
-         <Button component={Link} href="/submit/history" variant="outlined" size="large" fullWidth>
-           Past submissions
-         </Button>
          <Button component={Link} href="/submit/report" variant="outlined" size="large" fullWidth>
            Search report
          </Button>

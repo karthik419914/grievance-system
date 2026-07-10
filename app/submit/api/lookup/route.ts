@@ -15,7 +15,11 @@ export async function POST(request: Request) {
   }
 
   const all = await getAllGrievances();
-  const submission = all.find((g) => g.referenceCode.toUpperCase() === parsed.data.referenceCode.toUpperCase()) ?? null;
+  const normalizedCode = parsed.data.referenceCode.toUpperCase();
+  const submission =
+    all.find(
+      (g) => typeof g.referenceCode === "string" && g.referenceCode.toUpperCase() === normalizedCode
+    ) ?? null;
 
   return NextResponse.json({
     submission,

@@ -81,8 +81,8 @@ export async function addGrievance(grievance: Grievance): Promise<void> {
 
   try {
     await fs.writeFile(filePath, JSON.stringify(next, null, 2), "utf-8");
-  } catch {
-    inMemoryGrievances = next;
+  } catch (error) {
+    throw new Error(`Unable to persist grievance: ${String(error)}`);
   }
 }
 
@@ -106,7 +106,7 @@ export async function updateGrievanceStatus(
 
   try {
     await fs.writeFile(filePath, JSON.stringify(next, null, 2), "utf-8");
-  } catch {
-    inMemoryGrievances = next;
+  } catch (error) {
+    throw new Error(`Unable to persist grievance status: ${String(error)}`);
   }
 }

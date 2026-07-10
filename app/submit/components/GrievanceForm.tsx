@@ -14,7 +14,6 @@ import StepTwo from "./StepTwo";
 import StepReview from "./StepReview";
 import SuccessScreen from "./SuccessScreen";
 import { useDraft } from "../useDraft";
-import { addSavedSubmissionId } from "../useSubmissions";
 import { submitGrievance } from "../actions";
 import { StepOneData, StepTwoData, GrievanceFormData } from "@/lib/schema";
 
@@ -59,7 +58,6 @@ export default function GrievanceForm() {
     startTransition(async () => {
       const result = await submitGrievance(data);
       if (result.success) {
-        addSavedSubmissionId(result.referenceCode);
         clear();
         setSubmittedCode(result.referenceCode);
       } else {

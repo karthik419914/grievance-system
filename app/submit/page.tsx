@@ -38,9 +38,6 @@ export default function SubmitPage() {
         </Typography>
 
         <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2, mb: 4 }}>
-          <Button component={Link} href="/submit/history" variant="outlined" fullWidth>
-            Past submissions
-          </Button>
           <Button component={Link} href="/submit/report" variant="outlined" fullWidth>
             Search report
           </Button>
