@@ -19,9 +19,9 @@ The application operates in **Firebase mode** when credentials are provided in t
 ### 2. Admin Dashboard & Management
 * **Authentication**: Login page validating credentials against Firestore.
 * **Full-Page Grievance Reports**: Clicking a grievance opens a full-fledged report details page (`/admin/dashboard/[id]`) with a back button and status update selector.
-* **Main Admin Permission Check**: The default credentials are set to `karthik419914@gmail.com` (Main Admin).
+* **Main Admin Permission Check**: The default credentials are set to  (Main Admin).
 * **Role-Based Admin Management**: 
-  * Only the Main Admin (`karthik419914@gmail.com`) is allowed to see the "Manage Admins" button.
+  * Only the Main Admin  is allowed to see the "Manage Admins" button.
   * Clicking "Manage Admins" opens a modal to **list all current admin accounts**, **delete admin accounts** (with self-deletion protection), and **create new administrators** (requiring passwords to be entered twice and matching validation).
   * Regular administrators have access only to review grievances and update their status.
 
@@ -59,7 +59,7 @@ graph TD
     G -->|Yes| I[Standard Dashboard + Manage Admins Option]
     I --> J[Manage Admins Dialog]
     J --> K[List All Admins in Firestore]
-    J --> L[Delete Admin Accounts except karthik419914@gmail.com]
+    J --> L[Delete Admin Accounts except main admin]
     J --> M[Add New Admin type passwords twice]
 ```
 
