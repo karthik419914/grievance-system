@@ -35,7 +35,15 @@ export async function submitGrievance(data: unknown): Promise<SubmitResult> {
     createdAt: new Date().toISOString(),
   };
 
-  await addGrievance(grievance);
+  try {
+    await addGrievance(grievance);
+  } catch {
+    return {
+      success: false,
+      error:
+        "Unable to save your grievance at this time. Please try again later.",
+    };
+  }
 
   return { success: true, id: grievance.id, referenceCode: grievance.referenceCode };
 }

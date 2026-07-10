@@ -1,5 +1,19 @@
 [
   {
+    "id": "c88fcd47-ecbe-49bc-b3d5-cb4b95498a3a",
+    "referenceCode": "U1008",
+    "submitterName": "Test User",
+    "email": "test@example.com",
+    "relation": "resident",
+    "roomNumber": "101",
+    "contactPhone": "555-0101",
+    "category": "care_quality",
+    "priority": "low",
+    "description": "Test complaint details for debugging.",
+    "status": "new",
+    "createdAt": "2026-07-10T13:06:46.527Z"
+  },
+  {
     "id": "1a96f6b7-751d-4135-9333-36961584cb38",
     "referenceCode": "B3935",
     "submitterName": "karthik",
@@ -112,4 +126,4 @@
     "status": "in_review",
     "createdAt": "2026-07-02T10:05:00.000Z"
   }
-]
+][]
